@@ -1,0 +1,70 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ "master", "test" ]
+  pull_request:
+    branches: [ "master", "test" ]
+
+env:
+  PROJECT_NAME: Tesseract4Analyze
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup msbuild
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          msbuild-architecture: x64
+
+      - name: Setup Nuget
+        uses: Nuget/setup-nuget@v1.0.5
+      - name: Restore nuget packages
+        run: nuget restore D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}.sln
+
+      - name: Build
+        run: msbuild D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}.sln /p:Configuration=Release /p:Platform=x64
+        
+      - name: Cache Binaries
+        uses: actions/cache@v3
+        with:
+          path: D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\bin\x64\Release\
+          key: ${{ runner.OS }}-binaries-cache
+
+      - name: Cache Test Binaries
+        uses: actions/cache@v3
+        with:
+          path: D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\Tests\bin\x64\Release\
+          key: ${{ runner.OS }}-test-binaries-cache
+
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Nuget
+        uses: Nuget/setup-nuget@v1.0.5
+
+      - name: Setup NUnit.ConsoleRunner
+        run: nuget install NUnit.ConsoleRunner -Version 3.16.2 -DirectDownload -OutputDirectory .
+      - name: Cache Binaries
+        uses: actions/cache@v3
+        with:
+          path: D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\bin\x64\Release\
+          key: ${{ runner.OS }}-binaries-cache
+
+      - name: Cache Test Binaries
+        uses: actions/cache@v3
+        with:
+          path: D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\Tests\bin\x64\Release\
+          key: ${{ runner.OS }}-test-binaries-cache
+          
+      - name: Setup NUnit.ConsoleRunner
+        run: nuget install NUnit.ConsoleRunner -Version 3.16.2 -DirectDownload -OutputDirectory .   
+
+      - name: Run UnitTests
+        run: ./NUnit.ConsoleRunner.3.16.2/tools/nunit3-console.exe  D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\Tests\bin\x64\Release\Tests.dll
+          

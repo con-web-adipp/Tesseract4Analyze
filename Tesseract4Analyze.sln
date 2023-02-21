@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesseract4Analyze", "Tesseract4Analyze\Tesseract4Analyze.csproj", "{0DD29F71-6063-4851-A1AD-05E2B5CC97BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{3E977602-A9E6-4732-A6CA-03D0BC89E66A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|x64 = Release|x64
+		Debug|x64 = Debug|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DD29F71-6063-4851-A1AD-05E2B5CC97BC}.Release|x64.ActiveCfg = Release|x64
+		{0DD29F71-6063-4851-A1AD-05E2B5CC97BC}.Release|x64.Build.0 = Release|x64
+		{0DD29F71-6063-4851-A1AD-05E2B5CC97BC}.Debug|x64.ActiveCfg = Debug|x64
+		{0DD29F71-6063-4851-A1AD-05E2B5CC97BC}.Debug|x64.Build.0 = Debug|x64
+		{3E977602-A9E6-4732-A6CA-03D0BC89E66A}.Debug|x64.ActiveCfg = Debug|x64
+		{3E977602-A9E6-4732-A6CA-03D0BC89E66A}.Debug|x64.Build.0 = Debug|x64
+		{3E977602-A9E6-4732-A6CA-03D0BC89E66A}.Release|x64.ActiveCfg = Release|x64
+		{3E977602-A9E6-4732-A6CA-03D0BC89E66A}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+EndGlobal

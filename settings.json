@@ -1,0 +1,51 @@
+[
+  {
+    "Id": "625cf8a6-a648-44f9-aa3a-42624a77154c",
+    "FriendlyName": "Tesseract4Analyze",
+    "ExecutableFilePath": "Tesseract4Analyze.exe",
+    "ExecutableArguments": "",
+    "UseJsonInput": true,
+    "JsonInputFields": [
+      7,
+      32
+    ],
+    "MaxSimultaneousInstances": 8,
+    "WaitForExit": true,
+    "ParseOutput": true,
+    "ShouldWriteErrorLog": true,
+    "ExecutionTypes": 3,
+    "AutoStart": false,
+    "ForceTermination": true,
+    "SupportsBatchProcessing": true,
+    "MaxBatchSize": 1000,
+    "FileClassFilter": [
+      1
+    ],
+    "Description": "",
+    "IconPath": "",
+    "OdtFilePaths": [],
+    "Requirements": "",
+    "Vendor": "",
+    "TimeoutForExecution": 0,
+    "Version": "1.1.2",
+    "ProductName": "Tesseract4Analyze",
+    "FileFilterSettings": {
+      "MinWidth": 50,
+      "MinHeight": 50,
+      "MinSize": null,
+      "MaxSize": null,
+      "IncludeCategorized": false,
+      "IncludeUncategorized": true
+    },
+    "CustomProperties": [
+      {
+        "Id": 0,
+        "Name": "OCR-Text",
+        "Indexed": true,
+        "Visible": true,
+        "DataType": 0
+      }
+    ],
+    "ShowInForensicMarket": true
+  }
+]

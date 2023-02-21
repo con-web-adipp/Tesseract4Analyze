@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+        
+env:
+  PROJECT_NAME: Tesseract4Analyze
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup msbuild
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          msbuild-architecture: x64
+
+      - name: Setup Nuget
+        uses: Nuget/setup-nuget@v1.0.5
+      - name: Restore nuget packages
+        run: nuget restore D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}.sln
+
+      - name: Setup NUnit.ConsoleRunner
+        run: nuget install NUnit.ConsoleRunner -Version 3.16.2 -DirectDownload -OutputDirectory .
+
+      - name: Build
+        run: msbuild D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}.sln /p:Configuration=Release /p:Platform=x64
+
+      - name: Run UnitTests
+        run: ./NUnit.ConsoleRunner.3.16.2/tools/nunit3-console.exe  D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\Tests\bin\x64\Release\Tests.dll
+
+      - name: Prepare package
+        run: |
+          cd D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\
+          New-Item -ItemType Directory -Force -Path tmp\${{ env.PROJECT_NAME }}
+          Copy-Item D:\a\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\${{ env.PROJECT_NAME }}\bin\x64\Release\* tmp\${{ env.PROJECT_NAME }} -Recurse
+          Copy-Item settings.json ./tmp
+
+      - name: Pack package
+        run: |
+          7z a ${{ env.PROJECT_NAME }}_x64_${{ github.event.inputs.version }}.appkg ./tmp/${{ env.PROJECT_NAME }}/
+          7z a ${{ env.PROJECT_NAME }}_x64_${{ github.event.inputs.version }}.appkg ./tmp/settings.json
+      
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.PROJECT_NAME }}_x64_${{ github.event.inputs.version }}
+          path: ${{ env.PROJECT_NAME }}_x64_${{ github.event.inputs.version }}.appkg
