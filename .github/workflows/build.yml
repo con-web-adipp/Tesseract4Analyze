@@ -41,6 +41,7 @@ jobs:
           key: ${{ runner.OS }}-test-binaries-cache
 
   test:
+    needs: build
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
