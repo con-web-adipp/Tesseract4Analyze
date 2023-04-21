@@ -75,7 +75,7 @@ Other languages and scripts provided by Tesseract can be easily downloaded and i
 
 ### Language package configuration
 
-The languages used by the plugin can be specified in a json file:
+The languages used for detection are specified in a json file:
 
 ```
 C:\ProgramData\Griffeye Technologies\Griffeye Analyze\Data\Plugins\Tesseract4Analyze\Tesseract4AnalyzeSettings.json
@@ -117,11 +117,11 @@ C:\ProgramData\Griffeye Technologies\Griffeye Analyze\Data\Plugins\Tesseract4Ana
 
 They follow the naming convention [country code].traineddata, e.g. deu.traineddata for the German language package.
 
-The font packages can be found at
+The script packages can be found at
 ```
 C:\ProgramData\Griffeye Technologies\Griffeye Analyze\Data\Plugins\Tesseract4Analyze\tessdata-fast\scripts\
 ```
-and have another naming convention: [script name].traineddata, for example: Cyrillic.traineddata.
+They follow a slightly different naming convention: [script name].traineddata, for example: Cyrillic.traineddata.
 
 It is possible to use both scripts and language packages for detection:
 
