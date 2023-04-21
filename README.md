@@ -30,7 +30,7 @@ The plugin is ready to use immediately (e.g. via ``Case Data -> Rescan against P
 ### Basic usage
 
 The plugin adds a column named "OCR text" to the grid, which can then be searched using column filters ("contains").
-For example, if you filter by "account", all images will be displayed in which the word "account" appears in the OCR text.
+For example, if you filter by "account", you will get any image which contains the string "account" in the OCR-read text.
 
 
 ## Configuration
@@ -38,17 +38,17 @@ For example, if you filter by "account", all images will be displayed in which t
 ### Performance configuration
 
 
-The plugin is designed to run the plugin process (Tesseract4Analyze.exe) in parallel. This means that Analyze DI Pro calls the process several times at the same time.
-For optimal CPU utilization, there should be exactly as many processes running simultaneously as there are (logical) cores in the CPU.
+The plugin is designed to be run in parallel. This means that Analyze DI Pro calls the process several times at once.
+For optimal CPU utilization, there should be exactly as many processes running concurrently as there are (logical) cores in the CPU.
 
-See: ``File -> Settings -> Plugins -> Tesseract4Analyze -> Edit Plugin Settings -> Max Instances`` for configuration.
+See: ``File -> Settings -> Plugins -> Tesseract4Analyze -> Edit Plugin Settings -> Max Instances`` for configuration (default: 8).
 
 
 ### Languages
 
 Tesseract natively supports over 100 languages and scripts (including Latin Antiqua, Fraktur, Devanagari (Indian script), Chinese, Arabic, Greek, Hebrew, Cyrillic and more).
 
-The following languages and fonts are already included in this plugin package by default:
+The following languages and scripts are already included in this plugin package by default:
 
 Languages:
 - Arabic
@@ -68,10 +68,10 @@ Fonts:
 - Arabic
 - Cyrillic
 - Georgian
-- Greek script
-- Latin languages
+- Greek
+- Latin
 
-Other languages and fonts provided by Tesseract can be easily downloaded and integrated into the plugin (see below).
+Other languages and scripts provided by Tesseract can be easily downloaded and integrated into the plugin (see below).
 
 ### Language package configuration
 
@@ -108,21 +108,22 @@ Languages can be added to the configuration by adding the key for the respective
 }
 ```
 
-This configuration would now contain the language packages German, English, French, Italian, Portuguese and Spanish. The language packs themselves can be found at:
+This configuration now contains the language packages German, English, French, Italian, Portuguese and Spanish.
+
+The language packs themselves can be found at
 ```
 C:\ProgramData\Griffeye Technologies\Griffeye Analyze\Data\Plugins\Tesseract4Analyze\tessdata-fast\
 ```
 
-and follow the naming convention [country code].traineddata, e.g. deu.traineddata for the German language package.
+They follow the naming convention [country code].traineddata, e.g. deu.traineddata for the German language package.
 
-The font packages can be found under
-
+The font packages can be found at
 ```
 C:\ProgramData\Griffeye Technologies\Griffeye Analyze\Data\Plugins\Tesseract4Analyze\tessdata-fast\scripts\
 ```
-and are called, for example, Cyrillic.traineddata.
+and have another naming convention: [script name].traineddata, for example: Cyrillic.traineddata.
 
-It is possible to use fonts and language packages at the same time:
+It is possible to use both scripts and language packages for detection:
 
 ```json
 {
@@ -137,7 +138,7 @@ It is possible to use fonts and language packages at the same time:
 ### Additional language packages
 
 
-Additional language or script packages can be downloaded from [https://github.com/tesseract-ocr/tessdata_fast](https://github.com/tesseract-ocr/tessdata_fast) and just need to be placed in the appropriate folder (tessdata-fast, or tessdata-fast/scripts).
+Additional language or script packages can be downloaded from [https://github.com/tesseract-ocr/tessdata_fast](https://github.com/tesseract-ocr/tessdata_fast) and just need to be copied to the appropriate folder (tessdata-fast, or tessdata-fast/scripts).
 
 
 ## See also
