@@ -31,24 +31,25 @@ namespace Tesseract4Analyze
                 CustomProperties = new List<CustomProperty>()
             };
 
+            // create TessEngine
             var tess = new TessEngine(
                 Path.Combine(cwd, pluginSettings.TessdataPath),
                 pluginSettings.LanguageString
             );
 
-
             // iterate over files
             foreach (var imageFile in pluginInput)
-                try
+            {
+                var task = Task.Run(() => tess.ReadTextFromImage(imageFile.FilepathConverted));
+
+                if (!task.Wait(TimeSpan.FromSeconds(pluginSettings.TimeOut)))
                 {
-                    var task = Task.Run(() => tess.ReadTextFromImage(imageFile.FilepathConverted));
+                    Console.Error.WriteLine($"TessEngine timed out while processing {imageFile.FilepathConverted}");
+                    continue;
+                }
 
-                    if (!task.Wait(TimeSpan.FromSeconds(pluginSettings.TimeOut)))
-                    {
-                        Console.Error.WriteLine($"TessEngine timed out while processing {imageFile.FilepathConverted}");
-                        continue;
-                    }
-
+                if (task.Result != string.Empty)
+                {
                     pluginOutput.CustomProperties.Add(new CustomProperty
                     {
                         Id = 0,
@@ -56,11 +57,7 @@ namespace Tesseract4Analyze
                         Value = task.Result
                     });
                 }
-                catch (IOException)
-                {
-                    // targeting "not an image file error" thrown by TesseractOCR.Pix.Image.LoadFromFile:
-                    // That's fine as some of these files can't be read as an Image..
-                }
+            }
 
             // write output
             var outputString = JsonConvert.SerializeObject(pluginOutput);

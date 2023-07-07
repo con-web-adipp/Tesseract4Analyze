@@ -1,4 +1,5 @@
-﻿using TesseractOCR;
+﻿using System.IO;
+using TesseractOCR;
 using TesseractOCR.Enums;
 using TesseractOCR.Pix;
 
@@ -23,12 +24,22 @@ namespace Tesseract4Analyze
         
         public string ReadTextFromImage(string imageFilePath)
         {
-            var img = Image.LoadFromFile(imageFilePath);
-            var output = Engine.Process(img, PageSegMode.SparseText);
-            var outputText = output.Text;
-            img.Dispose();
-            output.Dispose();
-            return outputText;
+            try
+            {
+                var img = Image.LoadFromFile(imageFilePath);
+                var output = Engine.Process(img, PageSegMode.SparseText);
+                var outputText = output.Text;
+                img.Dispose();
+                output.Dispose();
+                return outputText;
+            }
+
+            catch (IOException)
+            {
+                // targeting "not an image file error" thrown by TesseractOCR.Pix.Image.LoadFromFile:
+                // That's fine as some of these files can't be read as an Image..
+                return string.Empty;
+            }
         }
     }
 }
