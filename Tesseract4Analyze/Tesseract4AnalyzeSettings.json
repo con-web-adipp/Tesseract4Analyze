@@ -3,5 +3,6 @@
   "Languages": [
     "deu",
     "eng"
-  ]
+  ],
+  "TimeOut": 60
 }

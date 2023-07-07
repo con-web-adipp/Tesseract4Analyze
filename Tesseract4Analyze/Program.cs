@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
-using TesseractOCR;
-using TesseractOCR.Enums;
-using TesseractOCR.Pix;
 
 namespace Tesseract4Analyze
 {
@@ -33,41 +31,36 @@ namespace Tesseract4Analyze
                 CustomProperties = new List<CustomProperty>()
             };
 
-            // setting up engine and output
+            var tess = new TessEngine(
+                Path.Combine(cwd, pluginSettings.TessdataPath),
+                pluginSettings.LanguageString
+            );
 
 
-            using (var engine = new Engine(
-                       Path.Combine(cwd, pluginSettings.TessdataPath ),
-                       pluginSettings.LanguageString))
-            {
-                engine.SetVariable("debug_file","/dev/null"); // suppress redundant logger messages from tesseract BaseAPI
-                engine.SetVariable("tessedit_do_invert", 0); // improves speed according to the docs
+            // iterate over files
+            foreach (var imageFile in pluginInput)
+                try
+                {
+                    var task = Task.Run(() => tess.ReadTextFromImage(imageFile.FilepathConverted));
 
-                // iterate over files
-                foreach (var imageFile in pluginInput)
-                    try
+                    if (!task.Wait(TimeSpan.FromSeconds(pluginSettings.TimeOut)))
                     {
-                        var img = Image.LoadFromFile(imageFile.FilepathConverted);
-                        var output = engine.Process(img, PageSegMode.SparseText);
-                        var outputText = output.Text;
-                        img.Dispose();
-                        output.Dispose();
-
-
-                        if (outputText != string.Empty)
-                            pluginOutput.CustomProperties.Add(new CustomProperty
-                            {
-                                Id = 0,
-                                Sha1 = imageFile.Sha1Hex,
-                                Value = outputText
-                            });
+                        Console.Error.WriteLine($"TessEngine timed out while processing {imageFile.FilepathConverted}");
+                        continue;
                     }
-                    catch (IOException)
+
+                    pluginOutput.CustomProperties.Add(new CustomProperty
                     {
-                        // targeting "not an image file error" thrown by TesseractOCR.Pix.Image.LoadFromFile:
-                        // That's fine as some of these files can't be read as an Image..
-                    }
-            }
+                        Id = 0,
+                        Sha1 = imageFile.Sha1Hex,
+                        Value = task.Result
+                    });
+                }
+                catch (IOException)
+                {
+                    // targeting "not an image file error" thrown by TesseractOCR.Pix.Image.LoadFromFile:
+                    // That's fine as some of these files can't be read as an Image..
+                }
 
             // write output
             var outputString = JsonConvert.SerializeObject(pluginOutput);

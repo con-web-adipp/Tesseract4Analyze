@@ -27,14 +27,14 @@
     "Requirements": "",
     "Vendor": "",
     "TimeoutForExecution": 0,
-    "Version": "1.1.3",
+    "Version": "1.1.4",
     "ProductName": "Tesseract4Analyze",
     "FileFilterSettings": {
       "MinWidth": 50,
       "MinHeight": 50,
       "MinSize": null,
       "MaxSize": null,
-      "IncludeCategorized": false,
+      "IncludeCategorized": true,
       "IncludeUncategorized": true
     },
     "CustomProperties": [
